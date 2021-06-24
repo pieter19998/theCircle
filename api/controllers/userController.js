@@ -12,19 +12,22 @@ router.post('/register', async (req, res, next) => {
     const fullName = req.body.fullName;
     const email = req.body.email;
     const password = req.body.password;
+    const publicKey = req.body.publicKey;
     req.body.status = 0;
     try {
         await Checker.checkUndefined([
             {item: fullName, field: "fullName"},
             {item: password, field: "password"},
-            {item: email, field: "email"}
+            {item: email, field: "email"},
+            {item: publicKey, field: "publicKey"}
         ]);
-        await Checker.emailRegex(email);
+        const a = await Checker.csr(req.body)
         req.body.password = Bcrypt.hashSync(password, 10);
         const user = new User(req.body);
         await user.save();
         await Logger(email, route, "REGISTER", req.body)
-        res.status(200).send({token: await Jwt.encode(email, user._id)});
+        // res.status(200).send({token: await Jwt.encode(email, user._id)});
+        res.status(200).send({message: "s"});
     } catch (e) {
         return next(e)
     }

@@ -1,7 +1,8 @@
 {
   "userRoutes":{
     "fetch":"http://localhost:3000/api/user",
-    "login":"http://localhost:3000/api/user/login"
+    "login":"http://localhost:3000/api/user/login",
+    "register":"http://localhost:3000/api/user/register"
   },
   "topicRoutes": {
     "fetchAll": "http://localhost:3000/api/topic",

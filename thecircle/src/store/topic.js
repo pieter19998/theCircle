@@ -10,7 +10,7 @@ const getters = {
 };
 
 const actions = {
-    async fetchTopic({commit}) {
+    async fetchTopics({commit}) {
         Axios.defaults.headers.common["token"] = sessionStorage.getItem('token');
         const response = await Axios.get(config.topicRoutes.fetchAll);
         commit('setTopic', response.data)

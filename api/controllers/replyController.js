@@ -15,7 +15,6 @@ router.post('/:id', async (req, res, next) => {
         await Checker.checkUndefined([{item: topic, field: "topic"}, {item: description, field: "description"}]);
         const decoded = await Jwt.decode(token);
         await Logger(decoded.email ,route,"POST", req.body)
-        console.log(decoded)
         const topic = new Topic({
             topic: topic,
             description: description,
@@ -27,5 +26,21 @@ router.post('/:id', async (req, res, next) => {
         return next(e)
     }
 });
+
+router.patch('/:id', async (req, res, next) => {
+    const topic = req.body.topic;
+    const description = req.body.description;
+    const token = req.header('token');
+    try {
+        await Checker.checkUndefined([{item: topic, field: "topic"}, {item: description, field: "description"}]);
+        const decoded = await Jwt.decode(token);
+        await Logger(decoded.email ,route,"PATCH", req.body)
+        await topic.save();
+        res.status(200).end();
+    } catch (e) {
+        return next(e)
+    }
+});
+
 
 module.exports = router;

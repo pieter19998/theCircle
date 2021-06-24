@@ -32,10 +32,16 @@ const actions = {
         commit('logOut')
     },
     async registerUser({commit}, data) {
-        const response = await Axios.post(config.userRoutes.fetch, {
+        await console.log(data)
+        const publicKey = data.key.exportKey('public')
+        const privateKey = data.key.exportKey()
+        localStorage.setItem('publicKey', publicKey);
+        localStorage.setItem('privateKey', privateKey);
+        const response = await Axios.post(config.userRoutes.register, {
             fullName: data.fullName,
             email: data.email,
-            password: data.password
+            password: data.password,
+            publicKey: publicKey
         });
         commit('setToken', response.data);
     },

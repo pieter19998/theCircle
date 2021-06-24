@@ -3,14 +3,14 @@
   <b-container>
     <br>
     <b-alert dismissible v-model="showDismissibleAlert" variant="danger">
-      {{warning}}
+      {{ warning }}
     </b-alert>
     <b-row>
       <b-col class="align-middle">
         <b-form @submit.self.prevent="register">
-          <h2>{{title}}</h2>
-          <b-form-group label="Username">
-            <b-input :state="fullNameLengthValidation" class="text-center" id="username"
+          <h2>{{ title }}</h2>
+          <b-form-group label="fullName">
+            <b-input :state="fullNameLengthValidation" class="text-center" id="fullName"
                      v-model="fullName"></b-input>
             <b-form-invalid-feedback :state="fullNameLengthValidation">
               Your full name must be 5-50 characters long.
@@ -56,6 +56,7 @@
 
 <script>
 import {mapActions} from "vuex";
+
 export default {
   name: "register",
   data() {
@@ -74,8 +75,16 @@ export default {
     ...mapActions(['registerUser', 'fetchCurrentUser']),
     async register() {
       try {
+        const NodeRSA = require('node-rsa');
+        const rsa = new NodeRSA({b: 512}, "pkcs1", {environment: 'browser', signingScheme: 'sha256'})
+
         if (this.password === this.passwordRepeat) {
-          await this.registerUser({email: this.email, password: this.password, fullName: this.fullName});
+          await this.registerUser({
+            email: this.email,
+            password: this.password,
+            fullName: this.fullName,
+            key: rsa.generateKeyPair()
+          });
           // await this.fetchCurrentUser();
           //reroute page
           await this.$router.push('/')
@@ -112,6 +121,7 @@ h2 {
   padding-bottom: 15px;
   padding-top: 15px;
 }
+
 .form-part {
   padding-bottom: 10px;
   padding-top: 10px;

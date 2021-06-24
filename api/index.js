@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const app = require('./app');
+const http = require('http');
+const httpsServer = http.createServer(app);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+httpsServer.listen(PORT, () => {
     console.log(`app is running on port ${PORT}`);
 });
 

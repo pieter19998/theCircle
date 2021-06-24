@@ -34,14 +34,23 @@ router.post('/', async (req, res, next) => {
 
 //get Topic
 router.get('/:id', async function (req, res, next) {
-    const token = req.header('token');
     try {
-        await Jwt.decode(token);
-        const topic = await Topic.findOne({_id: req.params.id, status: 0}).select({"status": 0, "comment": 0});
+        const topic = await Topic.findOne({_id: req.params.id, status: 0}).select({"status": 0});
         res.status(200).send(topic);
     } catch (e) {
         return next(e)
     }
 });
+
+//get Topics
+router.get('/', async function (req, res, next) {
+    try {
+        const topic = await Topic.find({_id: req.params.id, status: 0}).select({"status": 0});
+        res.status(200).send(topic);
+    } catch (e) {
+        return next(e)
+    }
+});
+
 
 module.exports = router;
