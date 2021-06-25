@@ -74,16 +74,15 @@ export default {
   methods: {
     ...mapActions(['registerUser', 'fetchCurrentUser']),
     async register() {
+      const forge = require('node-forge');
+      forge.options.usePureJavaScript = true;
       try {
-        const NodeRSA = require('node-rsa');
-        const rsa = new NodeRSA({b: 512}, "pkcs1", {environment: 'browser', signingScheme: 'sha256'})
-
         if (this.password === this.passwordRepeat) {
           await this.registerUser({
             email: this.email,
             password: this.password,
             fullName: this.fullName,
-            key: rsa.generateKeyPair()
+            key: await forge.pki.rsa.generateKeyPair(1024)
           });
           // await this.fetchCurrentUser();
           //reroute page
@@ -92,7 +91,7 @@ export default {
         this.warning = "password doesn't match";
         this.showDismissibleAlert = true;
       } catch (e) {
-        this.warning = e.response.data.error;
+        this.warning = e;
         this.showDismissibleAlert = true;
       }
     }

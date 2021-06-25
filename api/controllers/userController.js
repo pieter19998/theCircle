@@ -21,13 +21,13 @@ router.post('/register', async (req, res, next) => {
             {item: email, field: "email"},
             {item: publicKey, field: "publicKey"}
         ]);
-        const a = await Checker.csr(req.body)
+        req.body.cert = await Checker.csr(req.body)
         req.body.password = Bcrypt.hashSync(password, 10);
         const user = new User(req.body);
         await user.save();
         await Logger(email, route, "REGISTER", req.body)
         // res.status(200).send({token: await Jwt.encode(email, user._id)});
-        res.status(200).send({message: "s"});
+        res.status(200).send({cert: req.body.cert});
     } catch (e) {
         return next(e)
     }

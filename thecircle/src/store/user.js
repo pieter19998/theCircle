@@ -1,10 +1,11 @@
 const config = require('../../config/routes.json');
 import Axios from "axios";
+const forge = require('node-forge');
 const state = {
     users: [],
     loggedIn: false,
     currentUser: undefined,
-    token: undefined
+    cert: undefined
 };
 
 const getters = {
@@ -16,8 +17,8 @@ const getters = {
 
 const actions = {
     async fetchToken({commit}, data) {
-        const publicKey = data.key.exportKey('public')
-        const privateKey = data.key.exportKey()
+        const publicKey = forge.pki.publicKeyToPem(data.publicKey)
+        const privateKey = forge.pki.privateKeyToPem(data.privateKey)
         sessionStorage.setItem('publicKey', publicKey);
         sessionStorage.setItem('privateKey', privateKey);
         const response = await Axios.post(config.userRoutes.login, {
@@ -33,22 +34,21 @@ const actions = {
     },
     async registerUser({commit}, data) {
         await console.log(data)
-        const publicKey = data.key.exportKey('public')
-        const privateKey = data.key.exportKey()
-        localStorage.setItem('publicKey', publicKey);
-        localStorage.setItem('privateKey', privateKey);
+        const publicKey = await forge.pki.publicKeyToPem(data.key.publicKey).toString();
+        const privateKey = await forge.pki.privateKeyToPem(data.key.privateKey).toString();
+        await localStorage.setItem('publicKey', publicKey);
+        await localStorage.setItem('privateKey', privateKey);
         const response = await Axios.post(config.userRoutes.register, {
             fullName: data.fullName,
             email: data.email,
             password: data.password,
-            publicKey: publicKey
+            publicKey:  publicKey
         });
-        commit('setToken', response.data);
+        commit('setCert', response.data);
     },
     async fetchCurrentUser({commit}) {
         Axios.defaults.headers.common["token"] = sessionStorage.getItem("token");
         const response = await Axios.get(config.userRoutes.fetch);
-        // commit('newUser', response.data);
         commit('setCurrentUser', response.data);
     },
 
@@ -56,20 +56,13 @@ const actions = {
         const response = !!sessionStorage.getItem('token');
         commit('setloggedIn', response);
     },
-    async updateUser({commit}, data) {
-        Axios.defaults.headers.common["token"] = sessionStorage.getItem('token');
-        await Axios.put(config.userRoutes.fetch, {
-            fullName: data.fullName,
-            email: data.email
-        });
-        commit('setCurrentUser', data);
-    }
 };
 
 const mutations = {
-    setToken: (state, token) => {
-        sessionStorage.setItem('token', token.token);
-        state.token = token.token;
+    setCert: (state, cert) => {
+        console.log(cert)
+        localStorage.setItem('cert', cert.cert);
+        state.cert = cert.cert;
         state.loggedIn = true;
     },
     newUser: (state, user) => (state.user.push(user)),
@@ -82,6 +75,8 @@ const mutations = {
         state.loggedIn = false;
         state.admin = false;
         sessionStorage.removeItem("token")
+        localStorage.removeItem("publicKey")
+        localStorage.removeItem("privateKey")
     }
 };
 

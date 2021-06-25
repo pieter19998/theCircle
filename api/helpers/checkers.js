@@ -42,16 +42,17 @@ const checkHash = (data, signature, publicKey) => {
 const csr = (data) => {
     return new Promise((resolve, reject) => {
       try {
+          console.log(data.publicKey)
           const forge = require('node-forge');
           var cert = forge.pki.createCertificate();
-          cert.publicKey = data.publicKey;
+          cert.publicKey = forge.pki.publicKeyFromPem(data.publicKey);
           cert.serialNumber = '01';
           cert.validity.notBefore = new Date();
           cert.validity.notAfter = new Date();
           cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 1);
           var attrs = [{
               name: 'commonName',
-              value: 'example.org'
+              value: data.fullName
           }, {
               name: 'countryName',
               value: 'NL'
