@@ -53,7 +53,7 @@ const actions = {
     },
 
     async fetchUserLoggedIn({commit}) {
-        const response = !!sessionStorage.getItem('token');
+        const response = !!localStorage.getItem('cert');
         commit('setloggedIn', response);
     },
 };
@@ -68,12 +68,11 @@ const mutations = {
     newUser: (state, user) => (state.user.push(user)),
     setloggedIn: (state, loggedIn) => {
         state.loggedIn = loggedIn;
-        if (loggedIn) state.token = sessionStorage.getItem('token')
+        if (loggedIn) state.token = localStorage.getItem('cert')
     },
     setCurrentUser: (state, user) => (state.currentUser = user),
     logOut: (state) => {
         state.loggedIn = false;
-        state.admin = false;
         sessionStorage.removeItem("token")
         localStorage.removeItem("publicKey")
         localStorage.removeItem("privateKey")
