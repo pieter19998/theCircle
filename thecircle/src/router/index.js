@@ -21,12 +21,17 @@ const routes = [
         component: () => import('../views/authentication/Register.vue')
     },
     {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('../views/user/Profile')
+    },
+    {
         path: '/topic', component: () => import('../views/topic/Topic'),
         children: [
             {path: '', name: 'topic', component: () => import('../views/topic/TopicList')},
             {path: 'create', name: 'topicCreate', component: () => import('../views/topic/TopicCreate')},
-            // {path: 'update/:id', name: 'boardUpdate', component: () => import('../views/board/boardUpdate')},
-            // {path: ':id', name: 'boardView', component: () => import('../views/board/boardDetail')}
+            {path: 'create/:id', name: 'replyCreate', component: () => import('../views/reply/CreateReply')},
+            {path: 'topic/:id', name: 'topicDetail', component: () => import('../views/topic/TopicDetail')},
         ]
     },
 ]

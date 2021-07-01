@@ -9,16 +9,12 @@
         <b-form @submit.self.prevent="create">
           <div>
             <h2>{{ title }}</h2>
-            <label>Topic:</label>
-            <b-input v-model="topic" class="text-center" type="text" required id="text-topic"
-                     aria-describedby="username-help-block">
-            </b-input>
           </div>
           <div class="form-part">
-            <label>Description:</label>
+            <label>Text:</label>
             <b-form-textarea
                 id="textarea"
-                v-model="description"
+                v-model="text"
                 placeholder="Enter description..."
                 rows="3"
                 max-rows="6"
@@ -38,27 +34,27 @@
 import {mapActions} from "vuex";
 
 export default {
-  name: "Topic",
+  name: "Reply",
   data() {
     return {
       showDismissibleAlert: false,
-      topic: "",
-      description: "",
+      text: "",
       warning: "",
-      title: "Topic"
+      title: "Reply"
     }
   },
   methods: {
-    ...mapActions(['createTopic']),
+    ...mapActions(['createReply']),
     async create() {
       try {
         const data = {
-          topic: this.topic,
-          description: this.description,
+          text: this.text,
         }
         data.hash = await this.sign(data)
-        await this.createTopic(data);
-        await this.$router.push('/topic/');
+        data.topicId = this.$route.params.id
+        console.log(this.$route.params.id)
+        await this.createReply(data);
+        // await this.$router.push('/');
       } catch (e) {
         this.warning = e;
         this.showDismissibleAlert = true;

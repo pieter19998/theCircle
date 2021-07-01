@@ -24,26 +24,6 @@
                      type="email"
                      v-model="email"/>
           </b-form-group>
-          <b-form-group label="password">
-            <b-input :state="passwordLengthValidation" class="text-center" id="password" type="password"
-                     v-model="password"></b-input>
-            <b-form-invalid-feedback :state="passwordLengthValidation">
-              Your password must be 5-25 characters long.
-            </b-form-invalid-feedback>
-            <b-form-valid-feedback :state="passwordLengthValidation">
-              Looks Good.
-            </b-form-valid-feedback>
-          </b-form-group>
-          <b-form-group label="Password repeat">
-            <b-input :state="passwordRepeatValidation" class="text-center" id="passwordRepeat" type="password"
-                     v-model="passwordRepeat"></b-input>
-            <b-form-invalid-feedback :state="passwordRepeatValidation">
-              Password doesn't match.
-            </b-form-invalid-feedback>
-            <b-form-valid-feedback :state="passwordRepeatValidation">
-              Looks Good.
-            </b-form-valid-feedback>
-          </b-form-group>
           <b-form-group class="form-part">
             <br>
             <input class="btn btn-primary" type="submit" value="register"/>
@@ -64,32 +44,24 @@ export default {
       showDismissibleAlert: false,
       fullName: '',
       email: '',
-      password: "",
-      passwordRepeat: "",
       warning: "",
       title: "Register",
       button: true
     }
   },
   methods: {
-    ...mapActions(['registerUser', 'fetchCurrentUser']),
+    ...mapActions(['registerUser']),
     async register() {
       const forge = require('node-forge');
       forge.options.usePureJavaScript = true;
       try {
-        if (this.password === this.passwordRepeat) {
           await this.registerUser({
             email: this.email,
-            password: this.password,
             fullName: this.fullName,
             key: await forge.pki.rsa.generateKeyPair(1024)
           });
-          // await this.fetchCurrentUser();
           //reroute page
           await this.$router.push('/')
-        }
-        this.warning = "password doesn't match";
-        this.showDismissibleAlert = true;
       } catch (e) {
         this.warning = e;
         this.showDismissibleAlert = true;
@@ -99,16 +71,10 @@ export default {
   computed: {
     fullNameLengthValidation() {
       return this.fullName.length >= 5 && this.fullName.length < 50
-    },
-    passwordLengthValidation() {
-      return this.password.length >= 5 && this.password.length < 20
-    },
-    passwordRepeatValidation() {
-      return this.passwordRepeat === this.password
     }
   },
   async beforeCreate() {
-    if (sessionStorage.getItem('token') !== null) {
+    if (localStorage.getItem('cert') !== null) {
       await this.$router.push('/')
     }
   }

@@ -12,7 +12,6 @@ const getters = {
     allUsers: state => state.users,
     authStatus: state => state.loggedIn,
     currentUser: state => state.currentUser,
-    token: state => state.token
 };
 
 const actions = {
@@ -41,7 +40,6 @@ const actions = {
         const response = await Axios.post(config.userRoutes.register, {
             fullName: data.fullName,
             email: data.email,
-            password: data.password,
             publicKey:  publicKey
         });
         commit('setCert', response.data);
@@ -68,12 +66,11 @@ const mutations = {
     newUser: (state, user) => (state.user.push(user)),
     setloggedIn: (state, loggedIn) => {
         state.loggedIn = loggedIn;
-        if (loggedIn) state.token = localStorage.getItem('cert')
     },
     setCurrentUser: (state, user) => (state.currentUser = user),
     logOut: (state) => {
         state.loggedIn = false;
-        sessionStorage.removeItem("token")
+        localStorage.removeItem("cert")
         localStorage.removeItem("publicKey")
         localStorage.removeItem("privateKey")
     }

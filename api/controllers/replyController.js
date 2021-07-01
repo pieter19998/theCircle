@@ -2,45 +2,44 @@ const express = require('express');
 const router = express.Router();
 const Logger = require('../helpers/logger')
 const Checker = require('../helpers/checkers')
-const {Reply} = require('../schema/schema')
-const Jwt = require("../helpers/jwt");
+const {Topic, Reply} = require('../schema/schema')
+const cryp = require("../helpers/cryp");
 const route = "reply";
 
-//create topic
+//create reply
 router.post('/:id', async (req, res, next) => {
-    const topic = req.body.topic;
-    const description = req.body.description;
-    const token = req.header('token');
+    const text = req.body.text;
+    const hash = req.body.hash;
+    const cert = req.body.cert;
+    req.body.status = 0;
     try {
-        await Checker.checkUndefined([{item: topic, field: "topic"}, {item: description, field: "description"}]);
-        const decoded = await Jwt.decode(token);
-        await Logger(decoded.email ,route,"POST", req.body)
-        const topic = new Topic({
-            topic: topic,
-            description: description,
-            author: decoded._id
-        });
-        await topic.save();
-        res.status(200).end();
+        await Checker.checkUndefined([{item: text, field: "text"}, {item: hash, field: "hash"} , {item: cert, field: "cert"}]);
+        const publicKey = await cryp.checkCert(cert);
+        const data = {text: text}
+        await cryp.checkHash(data, hash, publicKey.key);
+        req.body.hash = Buffer.from(hash).toString('base64')
+        const topic = await Topic.findOne({_id: req.params.id});
+        if (topic) {
+            try {
+                const reply = await new Reply({
+                    text: text,
+                    author: publicKey.fullName,
+                    creationDate: Date.now(),
+                    status: 0
+                }).save();
+                await Topic.updateOne({_id: req.params.id}, {
+                    $push: {reply: reply._id}
+                });
+                await Logger(publicKey.fullName ,route,"POST", req.body)
+                res.status(200).end();
+            } catch (e) {
+                res.status(400).end();
+            }
+        }
+        await res.status(404).end();
     } catch (e) {
         return next(e)
     }
 });
-
-router.patch('/:id', async (req, res, next) => {
-    const topic = req.body.topic;
-    const description = req.body.description;
-    const token = req.header('token');
-    try {
-        await Checker.checkUndefined([{item: topic, field: "topic"}, {item: description, field: "description"}]);
-        const decoded = await Jwt.decode(token);
-        await Logger(decoded.email ,route,"PATCH", req.body)
-        await topic.save();
-        res.status(200).end();
-    } catch (e) {
-        return next(e)
-    }
-});
-
 
 module.exports = router;
