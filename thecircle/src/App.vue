@@ -32,20 +32,16 @@ import {mapActions, mapGetters} from 'vuex';
 export default {
   data() {
     return {
-      loggedIn: this.authStatus
     }
   },
   methods: {
-    ...mapActions(['fetchUserLoggedIn', 'fetchCurrentUser', 'fetchAdmin', 'logOut']),
+    ...mapActions(['fetchUserLoggedIn', 'logOut']),
     async bye() {
       await this.logOut();
       await this.$router.push('/');
     },
   },
-  computed: mapGetters(['authStatus', 'currentUser']),
-  async updated() {
-    await this.fetchUserLoggedIn();
-  }
+  computed: mapGetters(['authStatus']),
 }
 </script>
 

@@ -52,9 +52,8 @@ export default {
         }
         data.hash = await this.sign(data)
         data.topicId = this.$route.params.id
-        console.log(this.$route.params.id)
         await this.createReply(data);
-        // await this.$router.push('/');
+        await this.$router.push('/topic/detail/' + this.$route.params.id);
       } catch (e) {
         this.warning = e;
         this.showDismissibleAlert = true;

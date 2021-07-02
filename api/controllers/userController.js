@@ -24,7 +24,6 @@ router.post('/register', async (req, res, next) => {
         await Logger(fullName, route, "REGISTER", req.body)
         res.status(200).send({cert: req.body.cert});
     } catch (e) {
-        console.log(e)
         return next(e)
     }
 });

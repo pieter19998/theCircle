@@ -31,7 +31,7 @@ const routes = [
             {path: '', name: 'topic', component: () => import('../views/topic/TopicList')},
             {path: 'create', name: 'topicCreate', component: () => import('../views/topic/TopicCreate')},
             {path: 'create/:id', name: 'replyCreate', component: () => import('../views/reply/CreateReply')},
-            {path: 'topic/:id', name: 'topicDetail', component: () => import('../views/topic/TopicDetail')},
+            {path: 'detail/:id', name: 'topicDetail', component: () => import('../views/topic/TopicDetail')},
         ]
     },
 ]

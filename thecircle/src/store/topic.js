@@ -3,21 +3,26 @@ import Axios from "axios";
 
 const state = {
     topics: [],
+    currentTopic: undefined
 };
 
 const getters = {
     allTopics: state => state.topics,
-    getTopic(state) {
-        return topic => state.topics.filter(item => {
-            return item._id === topic
-        });
-    }
-
+    getTopic: state => state.currentTopic,
+    // getTopic(state) {
+    //     return topic => state.topics.filter(item => {
+    //         return item._id === topic
+    //     });
+    // }
 };
 
 const actions = {
     async fetchTopics({commit}) {
-        const response = await Axios.get(config.topicRoutes.fetchAll);
+        const response = await Axios.get(config.topicRoutes.fetch);
+        commit('setTopics', response.data)
+    },
+    async fetchTopic({commit}, id) {
+        const response = await Axios.get(config.topicRoutes.fetch + '/' + id);
         commit('setTopic', response.data)
     },
     async createTopic({commit}, data) {
@@ -40,7 +45,8 @@ const actions = {
 };
 
 const mutations = {
-    setTopic: (state, topic) => (state.topics = topic),
+    setTopics: (state, topic) => (state.topics = topic),
+    setTopic: (state, topic) => (state.currentTopic = topic),
     newTopic: (state, topic) => (state.topics.push(topic)),
     newReply: (state, reply) => (console.log(reply)),
 };

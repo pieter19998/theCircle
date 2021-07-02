@@ -51,7 +51,7 @@ const actions = {
     },
 
     async fetchUserLoggedIn({commit}) {
-        const response = !!localStorage.getItem('cert');
+        const response = !!sessionStorage.getItem('cert');
         commit('setloggedIn', response);
     },
 };
