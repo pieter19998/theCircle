@@ -5,7 +5,7 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(async function (req, res, next) {
-    await res.header("Access-Control-Allow-Origin", "*");
+    await res.header("Access-Control-Allow-Origin", "http://localhost:8080");
     await res.header("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,DELETE");
     await res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
     await next();
