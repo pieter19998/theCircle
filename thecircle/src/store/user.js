@@ -13,24 +13,10 @@ const getters = {
 };
 
 const actions = {
-    async fetchToken({commit}, data) {
-        const publicKey = forge.pki.publicKeyToPem(data.publicKey)
-        const privateKey = forge.pki.privateKeyToPem(data.privateKey)
-        sessionStorage.setItem('publicKey', publicKey);
-        sessionStorage.setItem('privateKey', privateKey);
-        const response = await Axios.post(config.userRoutes.login, {
-            email: data.email,
-            password: data.password,
-            publicKey: publicKey
-        });
-        commit('setToken', response.data)
-    },
-
     async logOut({commit}) {
         commit('logOut')
     },
     async registerUser({commit}, data) {
-        await console.log(data)
         const publicKey = await forge.pki.publicKeyToPem(data.key.publicKey).toString();
         const privateKey = await forge.pki.privateKeyToPem(data.key.privateKey).toString();
         await localStorage.setItem('publicKey', publicKey);
@@ -51,7 +37,6 @@ const actions = {
 
 const mutations = {
     setCert: (state, cert) => {
-        console.log(cert)
         localStorage.setItem('cert', cert.cert);
         state.cert = cert.cert;
         state.loggedIn = true;

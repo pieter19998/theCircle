@@ -7,6 +7,7 @@
         <b-collapse id="nav-collapse" is-nav type="dark">
           <b-navbar-nav class="">
             <b-nav-item to="/">Home</b-nav-item>
+            <b-nav-item to="/about">About</b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto" v-if="this.authStatus">
             <b-dropdown right text="Topic">

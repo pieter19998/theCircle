@@ -35,10 +35,11 @@ describe('Topic controller', () => {
         md.update({topic: "sss", description: "sss"}, 'utf8');
         const key = forge.pki.privateKeyFromPem(privateKey)
         const hash = key.sign(md);
-        await request(app)
+        const result = await request(app)
             .post('/api/topic')
             .send({topic: "testTopic", description: "testDescription", hash: hash, cert: cert})
             .expect(200);
+
     });
 
     it('Post to /api/topic valid request', async function () {
@@ -53,5 +54,35 @@ describe('Topic controller', () => {
         const topic = await Topic.findOne({topic: "testTopic", description: "testDescription"});
         await assert(topic.topic === "testTopic")
         await assert(topic.description === "testDescription")
+    });
+
+    it('Get to /api/topic/', async function () {
+        const md = forge.md.sha256.create();
+        md.update({topic: "testTopic", description: "testDescription"}, 'utf8');
+        const key = forge.pki.privateKeyFromPem(privateKey)
+        const hash = key.sign(md);
+        await request(app)
+            .post('/api/topic')
+            .send({topic: "testTopic", description: "testDescription", hash: hash, cert: cert})
+            .expect(200);
+        const result = await request(app)
+            .get('/api/topic/')
+            .expect(200);
+        assert(result !== null)
+    });
+    it('Get to /api/topic/:id', async function () {
+        const md = forge.md.sha256.create();
+        md.update({topic: "testTopic", description: "testDescription"}, 'utf8');
+        const key = forge.pki.privateKeyFromPem(privateKey)
+        const hash = key.sign(md);
+        await request(app)
+            .post('/api/topic')
+            .send({topic: "testTopic", description: "testDescription", hash: hash, cert: cert})
+            .expect(200);
+        const id = await Topic.findOne({topic: "testTopic", description: "testDescription"});
+        const result = await request(app)
+            .get('/api/topic/' + id._id)
+            .expect(200);
+        assert(result !== null)
     });
 });

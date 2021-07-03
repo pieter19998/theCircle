@@ -3,12 +3,11 @@
     <br>
     <h1></h1>
     <label>PublicKey</label>
-    <b-form-input type="password" id="text-password" aria-describedby="password-help-block" disabled>{{ cert }}
-    </b-form-input>
+    <b-form-input type="text" :value="this.public" disabled></b-form-input>
     <label>PrivateKey</label>
-    <b-form-input type="password" id="text-password" aria-describedby="password-help-block" disabled></b-form-input>
+    <b-form-input type="text" :value="this.private" disabled></b-form-input>
     <label>Cert</label>
-    <b-form-input type="password" id="text-password" aria-describedby="password-help-block" disabled></b-form-input>
+    <b-form-input type="text" :value="this.cert" disabled></b-form-input>
   </b-container>
 </template>
 
@@ -19,7 +18,8 @@ export default {
     return {
       cert: localStorage.getItem('cert'),
       public: localStorage.getItem('publicKey'),
-      private: localStorage.getItem('privateKey')
+      private: localStorage.getItem('privateKey'),
+      labelType: "password"
     }
   },
   async created() {

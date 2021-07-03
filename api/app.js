@@ -14,6 +14,7 @@ app.use(async function (req, res, next) {
 const UserController = require('./controllers/userController');
 const TopicController = require('./controllers/topicController');
 const ReplyController = require('./controllers/replyController');
+const CertController = require('./controllers/certController');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use('/api/user', UserController);
 app.use('/api/topic', TopicController);
 app.use('/api/reply', ReplyController);
+app.use('/api/cert', CertController);
 
 //fallback
 app.all("*", function (req, res) {

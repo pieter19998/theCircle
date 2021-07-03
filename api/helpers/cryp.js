@@ -13,7 +13,6 @@ const checkCert = (cert) => {
             resolve({key: certificateFromPem.publicKey, fullName: certificateFromPem.subject.attributes[0].value});
         } catch (e) {
             reject({message: "cert check failed"});
-            console.log(e)
         }
     });
 };
@@ -63,12 +62,17 @@ const csr = (data) => {
             const pem = forge.pki.certificateToPem(cert);
             resolve(pem)
         } catch (e) {
-            console.log(e)
             reject(e)
         }
     });
 };
 
+//verify digital signature
+const getCert = () => {
+    return new Promise((resolve) => {
+        resolve(location.toString())
+    })
+}
 module.exports = {
-    checkCert, csr, checkHash
+    checkCert, csr, checkHash, getCert
 };
