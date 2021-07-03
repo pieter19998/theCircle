@@ -1,18 +1,18 @@
 <template>
   <b-container>
     <h1>{{this.topic}}</h1>
+    {{this.authStatus}}
     <b-card
         :header="this.topic"
         tag="article"
-        footer="Date:"
+        :footer="new Date(this.creationDate).toUTCString()"
     >
       <b-card-sub-title class="mb-2">{{ this.author }}</b-card-sub-title>
       <b-card-body>
         <b-card-text>
           {{ this.description }}
         </b-card-text>
-        <!--        <b-card-sub-title class="mb-2">{{Date.parse(thread.thread.creationDate)}}</b-card-sub-title>-->
-        <b-link class="btn btn-primary" id="replyCreate" :to="{ name: 'replyCreate', params: { id: this.id } }">
+        <b-link v-if="this.authStatus" class="btn btn-primary" id="replyCreate" :to="{ name: 'replyCreate', params: { id: this.id } }">
           Reply
         </b-link>
       </b-card-body>
@@ -38,13 +38,14 @@ export default {
       topic: "",
       description: "",
       author: "",
+      creationDate: "",
       reply: []
     }
   },
   methods: {
-    ...mapActions(['fetchTopic'])
+    ...mapActions(['fetchTopic', 'fetchUserLoggedIn'])
   },
-  computed: mapGetters(['getTopic']),
+  computed: mapGetters(['getTopic','authStatus']),
   async created() {
     await this.fetchTopic(this.$route.params.id);
     const data = await this.getTopic
@@ -53,7 +54,12 @@ export default {
     this.author = data.author
     this.description = data.description
     this.reply = data.reply
+    this.creationDate = data.creationDate
   },
+  async beforeMount() {
+    await this.fetchUserLoggedIn()
+    await console.log(this.authStatus)
+  }
 }
 </script>
 <style scoped>

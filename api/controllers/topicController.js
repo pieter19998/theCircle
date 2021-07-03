@@ -40,7 +40,7 @@ router.post('/', async (req, res, next) => {
 //get Topic
 router.get('/:id', async function (req, res, next) {
     try {
-        const topic = await Topic.findOne({_id: req.params.id, status: 0}).populate('reply');
+        const topic = await Topic.findOne({_id: req.params.id, status: 0}).populate('reply').where({status: 0});
         res.status(200).send(topic);
     } catch (e) {
         return next(e)

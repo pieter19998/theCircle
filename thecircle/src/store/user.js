@@ -2,14 +2,12 @@ const config = require('../../config/routes.json');
 import Axios from "axios";
 const forge = require('node-forge');
 const state = {
-    users: [],
     loggedIn: false,
     currentUser: undefined,
     cert: undefined
 };
 
 const getters = {
-    allUsers: state => state.users,
     authStatus: state => state.loggedIn,
     currentUser: state => state.currentUser,
 };
@@ -44,14 +42,9 @@ const actions = {
         });
         commit('setCert', response.data);
     },
-    async fetchCurrentUser({commit}) {
-        Axios.defaults.headers.common["token"] = sessionStorage.getItem("token");
-        const response = await Axios.get(config.userRoutes.fetch);
-        commit('setCurrentUser', response.data);
-    },
 
     async fetchUserLoggedIn({commit}) {
-        const response = !!sessionStorage.getItem('cert');
+        const response = localStorage.getItem('cert') !== null;
         commit('setloggedIn', response);
     },
 };

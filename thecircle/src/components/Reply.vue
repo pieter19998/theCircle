@@ -2,7 +2,7 @@
   <b-container>
     <b-card
         :header="this.reply.reply.author"
-        footer="Date:"
+        :footer="new Date(this.reply.reply.creationDate).toUTCString()"
     >
       <b-card-text>{{ this.reply.reply.text }}</b-card-text>
     </b-card>

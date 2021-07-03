@@ -9,11 +9,6 @@ const state = {
 const getters = {
     allTopics: state => state.topics,
     getTopic: state => state.currentTopic,
-    // getTopic(state) {
-    //     return topic => state.topics.filter(item => {
-    //         return item._id === topic
-    //     });
-    // }
 };
 
 const actions = {
