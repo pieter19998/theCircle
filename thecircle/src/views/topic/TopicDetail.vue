@@ -58,7 +58,6 @@ export default {
   },
   async beforeMount() {
     await this.fetchUserLoggedIn()
-    await console.log(this.authStatus)
   }
 }
 </script>

@@ -12,12 +12,12 @@ const getters = {
 const actions = {
     async fetchCertCircle({commit}) {
         const response = await Axios.get(config.certRoutes.fetch);
-        commit('setCert', response.data)
+        commit('setCertTheCircle', response.data)
     }
 };
 
 const mutations = {
-    setCert: (state, cert) => (state.cert = cert),
+    setCertTheCircle: (state, cert) => (state.cert = cert),
 };
 
 export default ({
